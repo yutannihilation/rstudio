@@ -746,6 +746,12 @@ public class Source implements InsertSourceHandler,
    }
    
    @Handler
+   public void onNewShinyApp()
+   {
+      globalDisplay_.showErrorMessage("Foo", "ShinyApp");
+   }
+   
+   @Handler
    public void onNewRHTMLDoc()
    {
       newSourceDocWithTemplate(FileTypeRegistry.RHTML, 

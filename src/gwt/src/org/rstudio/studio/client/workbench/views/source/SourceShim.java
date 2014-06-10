@@ -74,6 +74,8 @@ public class SourceShim extends Composite
       @Handler
       public abstract void onNewRMarkdownDoc();
       @Handler
+      public abstract void onNewShinyApp();
+      @Handler
       public abstract void onNewRHTMLDoc();
       @Handler
       public abstract void onNewRDocumentationDoc();

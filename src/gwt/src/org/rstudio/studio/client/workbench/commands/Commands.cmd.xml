@@ -31,6 +31,7 @@ well as menu structures (for main menu and popup menus).
             <cmd refid="newSourceDoc"/>
             <separator/>
             <cmd refid="newRMarkdownDoc"/>
+            <cmd refid="newShinyApp"/>
             <separator/>
             <cmd refid="newTextDoc"/>
             <cmd refid="newCppDoc"/>
@@ -570,12 +571,16 @@ well as menu structures (for main menu and popup menus).
         desc="Help on using Rcpp"/>         
               
    <cmd id="newSweaveDoc"
-        menuLabel="R _Sweave"
+        menuLabel="R S_weave"
         desc="Create a new R Sweave document"/>  
         
    <cmd id="newRMarkdownDoc"
         menuLabel="R _Markdown..."
         desc="Create a new R Markdown document"/>    
+         
+   <cmd id="newShinyApp"
+        menuLabel="Shiny App..."
+        desc="Create a new Shiny application"/>    
    
     <cmd id="newRHTMLDoc"
         menuLabel="R _HTML"
