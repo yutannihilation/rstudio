@@ -16,6 +16,7 @@ package org.rstudio.studio.client.workbench.views.console.shell.assist;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HTML;
+
 import org.rstudio.core.client.events.HasSelectionCommitHandlers;
 import org.rstudio.core.client.events.SelectionCommitHandler;
 import org.rstudio.core.client.widget.ThemedPopupPanel;
@@ -23,13 +24,37 @@ import org.rstudio.core.client.widget.ThemedPopupPanel;
 public class CompletionListPopupPanel extends ThemedPopupPanel
    implements HasSelectionCommitHandlers<String>
 {
+   public CompletionListPopupPanel()
+   {
+      this(new String[0]);
+   }
+   
+   public CompletionListPopupPanel(String text)
+   {
+      this(new String[0]);
+      setText(text);
+   }
+   
    public CompletionListPopupPanel(String[] entries)
    {
       super(true);
+      text_ = new HTML();
       list_ = new CompletionList<String>(entries, 10, false, true);
       setWidget(list_);
    }
-
+   
+   public void setEntries(String[] entries)
+   {
+      list_.setItems(entries, 10, false); 
+      setWidget(list_);
+   }
+   
+   public void setText(String s)
+   {
+      text_.setText(s);
+      setWidget(text_);
+   }
+   
    public HandlerRegistration addSelectionCommitHandler(
          SelectionCommitHandler<String> handler)
    {
@@ -79,12 +104,6 @@ public class CompletionListPopupPanel extends ThemedPopupPanel
       list_.setMaxWidth(pixels);
    }
 
-   public void setText(String s)
-   {
-      HTML html = new HTML();
-      html.setText(s);
-      setWidget(html);
-   }
-
+   private final HTML text_;
    private final CompletionList<String> list_;
 }

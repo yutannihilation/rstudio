@@ -99,7 +99,7 @@ public class CppCompletionRequest
          }
          
          // create the popup
-         createCompletionPopup(entries.toArray(new String[0]));
+         setCompletionPopupContents(entries.toArray(new String[0]));
       }
    }
    
@@ -135,7 +135,7 @@ public class CppCompletionRequest
       // check for none found condition on explicit completion
       else if ((completions_.length() == 0) && explicit_)
       {
-         createCompletionPopup("(No matches)");
+         setCompletionPopupContents("(No matches)");
       }
       // otherwise just update the ui (apply filter, etc.)
       else
@@ -144,22 +144,31 @@ public class CppCompletionRequest
       }
    }
    
-   private void createCompletionPopup(String message)
+   private void setCompletionPopupContents(String message)
    {
-      closeCompletionPopup();
-      popup_ = new CompletionListPopupPanel(new String[0]);
       popup_.setText(message);
-      showCompletionPopup();
+      popup_.setVisible(true);
    }
    
-   private void createCompletionPopup(String[] entries)
+   private void setCompletionPopupContents(String[] entries)
    {
-      closeCompletionPopup();
       if (entries.length > 0)
       {
-         popup_ = new CompletionListPopupPanel(entries);
-         showCompletionPopup();
+         if (popup_ == null)
+         {
+            popup_ = new CompletionListPopupPanel(entries);
+            showCompletionPopup();
+         }
+         else
+         {
+            popup_.setEntries(entries);
+            popup_.setVisible(true);
+         }
       }
+      else
+      {
+         popup_.setVisible(false);
+      } 
    }
    
    private void showCompletionPopup()
@@ -222,7 +231,7 @@ public class CppCompletionRequest
          return;
       
       if (explicit_)
-         createCompletionPopup(error.getUserMessage());
+         setCompletionPopupContents(error.getUserMessage());
    }
    
    public void applyValue(String completion)

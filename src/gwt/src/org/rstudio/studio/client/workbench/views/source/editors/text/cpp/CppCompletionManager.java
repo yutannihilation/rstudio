@@ -365,7 +365,10 @@ public class CppCompletionManager implements CompletionManager
    {
       CompletionListPopupPanel popup = request_ != null ?
             request_.getCompletionPopup() : null;
-      return popup;
+      if ((popup != null) && popup.isVisible())
+         return popup;
+      else
+         return null;
    }
    
    private void terminateCompletionRequest()

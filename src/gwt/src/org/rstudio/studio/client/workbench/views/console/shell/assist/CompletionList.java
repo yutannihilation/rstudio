@@ -94,35 +94,59 @@ class CompletionList<TItem> extends Composite
    {
       allowVerticalShrink_ = allowVerticalShrink;
       styles_ = ConsoleResources.INSTANCE.consoleStyles();
-      GridEx grid = new GridEx(items.length, 1) ;
-      for (int i = 0; i < items.length; i++)
-      {
-         if (asHtml)
-            grid.setHTML(i, 0, items[i].toString()) ;
-         else
-            grid.setText(i, 0, items[i].toString()) ;
-      }
-      grid.addClickHandler(new GridMouseHandler()) ;
-      grid.addMouseMoveHandler(new GridMouseHandler()) ;
-      grid.setStylePrimaryName(styles_.completionGrid()) ;
-      
-      FontSizer.applyNormalFontSize(grid);
+      grid_ = new GridEx(1, 1);
+      grid_.addClickHandler(new GridMouseHandler()) ;
+      grid_.addMouseMoveHandler(new GridMouseHandler()) ;
+      grid_.setStylePrimaryName(styles_.completionGrid()) ;
+        
+      FontSizer.applyNormalFontSize(grid_);
 
       scrollPanel_ = new ScrollPanel() ;
       scrollPanel_.getElement().getStyle().setProperty("overflowX", "hidden");
-      scrollPanel_.add(grid) ;
-      scrollPanel_.setHeight((visibleItems * 20) + "px") ;
+      scrollPanel_.add(grid_) ;
+      
+      setItems(items, visibleItems, asHtml);
       
       initWidget(scrollPanel_) ;
-      grid_ = grid ;
-      items_ = items ;
+   }
+   
+   public void setItems(TItem[] items, int visibleItems, boolean asHtml)
+   {
+      items_ = items;
+      grid_.resize(items.length, 1);
+      
+      for (int i = 0; i < items_.length; i++)
+      {
+         if (asHtml)
+            grid_.setHTML(i, 0, items[i].toString()) ;
+         else
+            grid_.setText(i, 0, items[i].toString()) ;
+      }
+      
+      scrollPanel_.setHeight((visibleItems * 20) + "px") ;
+      
+      // if we are already attached then manipulate width and height
+      // (if we aren't then this will be taken care of in onLoad)
+      if (isAttached())
+         syncWidthAndHeight();
    }
    
    @Override
    protected void onLoad()
    {
       super.onLoad() ;
-      int width = grid_.getOffsetWidth() + 20;
+      syncWidthAndHeight(20);
+      selectNext() ;
+   }
+   
+   private void syncWidthAndHeight()
+   {
+      syncWidthAndHeight(0);
+   }
+   
+   private void syncWidthAndHeight(int pad)
+   {
+      int width = grid_.getOffsetWidth() + pad;
       if (maxWidthInPixels_ != null
           && maxWidthInPixels_ > 0
           && maxWidthInPixels_ < width)
@@ -134,7 +158,6 @@ class CompletionList<TItem> extends Composite
          scrollPanel_.setHeight("") ;
       }
       grid_.setWidth("100%") ;
-      selectNext() ;
    }
 
    public int getItemCount()
@@ -296,7 +319,7 @@ class CompletionList<TItem> extends Composite
    private int selectedIndex_ = -1 ;
    
    private final GridEx grid_ ;
-   private final TItem[] items_ ;
+   private TItem[] items_ ;
    private final ScrollPanel scrollPanel_ ;
    private final ConsoleResources.ConsoleStyles styles_;
    private final boolean allowVerticalShrink_;
