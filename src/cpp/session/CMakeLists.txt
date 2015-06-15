@@ -420,23 +420,26 @@ if (NOT RSTUDIO_SESSION_WIN64)
    install(DIRECTORY "resources/help_resources"
            DESTINATION ${RSTUDIO_INSTALL_SUPPORTING}/resources)
 
-   # install libclang
-   if(WIN32)
-      file(GLOB LIBCLANG_32_FILES "${LIBCLANG_DIR}/x86/libclang.*")
-      install(PROGRAMS ${LIBCLANG_32_FILES}
-              DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang/x86)
-      file(GLOB LIBCLANG_64_FILES "${LIBCLANG_DIR}/x86_64/libclang.*")
-      install(PROGRAMS ${LIBCLANG_64_FILES}
-              DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang/x86_64)
-   else()
-      file(GLOB_RECURSE LIBCLANG_FILES "${LIBCLANG_DIR}/libclang.*")
-      install(PROGRAMS ${LIBCLANG_FILES}
-              DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang)
-   endif()
+   # install libclang on windows and mac
+   if (WIN32 OR APPLE)
+      # libclang library
+      if(WIN32)
+         file(GLOB LIBCLANG_32_FILES "${LIBCLANG_DIR}/x86/libclang.*")
+         install(PROGRAMS ${LIBCLANG_32_FILES}
+                 DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang/x86)
+         file(GLOB LIBCLANG_64_FILES "${LIBCLANG_DIR}/x86_64/libclang.*")
+         install(PROGRAMS ${LIBCLANG_64_FILES}
+                 DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang/x86_64)
+      elseif(APPLE)
+         file(GLOB_RECURSE LIBCLANG_FILES "${LIBCLANG_DIR}/libclang.*")
+         install(PROGRAMS ${LIBCLANG_FILES}
+                 DESTINATION  ${RSTUDIO_INSTALL_BIN}/rsclang)
+      endif()
 
-   # install libclang builtin-headers
-   install(DIRECTORY "${RSTUDIO_DEPENDENCIES_DIR}/common/libclang/builtin-headers"
-           DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources/libclang")
+      # libclang builtin-headers
+      install(DIRECTORY "${RSTUDIO_DEPENDENCIES_DIR}/common/libclang/builtin-headers"
+              DESTINATION "${RSTUDIO_INSTALL_SUPPORTING}/resources/libclang")
+   endif()
 
    # install 64 bit binaries if we are on win64
    if(WIN32)
