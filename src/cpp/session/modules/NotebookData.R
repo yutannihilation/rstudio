@@ -196,12 +196,6 @@
         paste0("<", summary, ">")
       })
 
-  if (length(columns) > 0) {
-    first_column = data[[1]]
-    if (is.numeric(first_column) && isTRUE(all(diff(first_column) == 1)))
-      columns[[1]]$align <- "left"
-    }
-
   data <- as.data.frame(
     lapply(
       data,
@@ -211,7 +205,7 @@
           y[y == "NA"] <- "__NA__"
         }
 
-        y <- encodeString(format(y, digits = getOption("digits")))
+        y <- encodeString(format(y))
 
         # trim spaces
         gsub("^\\s+|\\s+$", "", y)

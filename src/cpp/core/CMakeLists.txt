@@ -1,7 +1,7 @@
 #
 # CMakeLists.txt
 #
-# Copyright (C) 2009-12 by RStudio, Inc.
+# Copyright (C) 2009-16 by RStudio, Inc.
 #
 # Unless you have received this program directly from RStudio pursuant
 # to the terms of a commercial license agreement with RStudio, then
@@ -104,7 +104,6 @@ set (CORE_SOURCE_FILES
    r_util/RSessionContext.cpp
    r_util/RTokenizer.cpp
    r_util/RSourceIndex.cpp
-   r_util/RTokenizerTests.cpp
    r_util/RUserData.cpp
    spelling/HunspellCustomDictionaries.cpp
    spelling/HunspellDictionaryManager.cpp
@@ -230,6 +229,7 @@ if (UNIX)
       system/PosixShellUtils.cpp
       system/PosixSystem.cpp
       system/PosixUser.cpp
+      system/PosixGroup.cpp
       system/PosixChildProcess.cpp
    )
 

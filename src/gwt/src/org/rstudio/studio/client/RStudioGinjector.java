@@ -123,6 +123,7 @@ import org.rstudio.studio.client.workbench.views.environment.ClearAllDialog;
 import org.rstudio.studio.client.workbench.views.environment.dataimport.DataImport;
 import org.rstudio.studio.client.workbench.views.environment.dataimport.DataImportDialog;
 import org.rstudio.studio.client.workbench.views.environment.dataimport.DataImportOptionsUiCsv;
+import org.rstudio.studio.client.workbench.views.environment.dataimport.DataImportOptionsUiCsvLocale;
 
 @GinModules(RStudioGinModuleOverlay.class)
 public interface RStudioGinjector extends Ginjector
@@ -186,7 +187,8 @@ public interface RStudioGinjector extends Ginjector
    void injectMembers(AddinExecutor addinExecutor);
    void injectMembers(DataImportDialog dataImportDialog);
    void injectMembers(DataImport dataImport);
-   void injectMembers(DataImportOptionsUiCsv dataImport);
+   void injectMembers(DataImportOptionsUiCsv dataImportOptionsUiCsv);
+   void injectMembers(DataImportOptionsUiCsvLocale dataImportOptionsUiCsvLocale);
    void injectMembers(CppCompletion completion);
    void injectMembers(ConsoleTabPanel consoleTabPanel);
    void injectMembers(VirtualConsole console);

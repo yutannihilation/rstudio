@@ -15,7 +15,10 @@
 
 .rs.addFunction("recordHtmlWidget", function(x, htmlfile, depfile)
 {
-   .Call("rs_recordHtmlWidget", htmlfile, depfile, list(classes = class(x)))
+   .Call("rs_recordHtmlWidget", htmlfile, depfile, list(
+      classes = class(x),
+      sizingPolicy = x$sizingPolicy
+   ))
 })
 
 .rs.addFunction("rnb.setHtmlCaptureContext", function(...)
@@ -130,6 +133,11 @@
    # force a responsive viewer sizing policy
    x$sizingPolicy$viewer.padding <- 0
    x$sizingPolicy$viewer.fill <- TRUE
+
+   # make width dinamic to size correctly non-figured
+   if (!is.null(x$sizingPolicy$knitr) && identical(x$sizingPolicy$knitr$figure, FALSE)) {
+      x$sizingPolicy$defaultWidth <- "auto"
+   }
    
    # collect knitr options
    knitrOptions <- knitr::opts_current$get()
