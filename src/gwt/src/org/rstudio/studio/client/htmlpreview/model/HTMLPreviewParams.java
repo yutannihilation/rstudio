@@ -26,13 +26,15 @@ public class HTMLPreviewParams extends JavaScriptObject
                                                        String encoding,
                                                        boolean isMarkdown,
                                                        boolean requiresKnit,
-                                                       boolean isNotebook)/*-{
+                                                       boolean isNotebook,
+                                                       boolean showPath)/*-{
       var params = new Object();
       params.path = path;
       params.encoding = encoding;
       params.is_markdown = isMarkdown;
       params.requires_knit = requiresKnit;
       params.is_notebook = isNotebook;
+      params.show_path = showPath;
       return params;
    }-*/; 
    
@@ -54,5 +56,9 @@ public class HTMLPreviewParams extends JavaScriptObject
 
    public final native boolean isNotebook() /*-{
       return this.is_notebook;
+   }-*/;
+   
+   public final native boolean getShowPath() /*-{
+      return this.show_path;
    }-*/;
 }

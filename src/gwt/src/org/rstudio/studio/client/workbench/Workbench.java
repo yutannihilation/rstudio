@@ -47,6 +47,8 @@ import org.rstudio.studio.client.common.vcs.AskPassManager;
 import org.rstudio.studio.client.common.vcs.ShowPublicKeyDialog;
 import org.rstudio.studio.client.common.vcs.VCSConstants;
 import org.rstudio.studio.client.htmlpreview.HTMLPreview;
+import org.rstudio.studio.client.htmlpreview.events.ShowHTMLPreviewEvent;
+import org.rstudio.studio.client.htmlpreview.model.HTMLPreviewParams;
 import org.rstudio.studio.client.pdfviewer.PDFViewer;
 import org.rstudio.studio.client.projects.ProjectOpener;
 import org.rstudio.studio.client.rmarkdown.RmdOutput;
@@ -82,7 +84,8 @@ public class Workbench implements BusyHandler,
                                   WorkbenchMetricsChangedHandler,
                                   InstallRtoolsEvent.Handler,
                                   ShinyGadgetDialogEvent.Handler,
-                                  ExecuteUserCommandEvent.Handler
+                                  ExecuteUserCommandEvent.Handler,
+                                  ShowPageViewerEvent.Handler
 {
    interface Binder extends CommandBinder<Commands, Workbench> {}
    
@@ -142,6 +145,7 @@ public class Workbench implements BusyHandler,
       eventBus.addHandler(InstallRtoolsEvent.TYPE, this);
       eventBus.addHandler(ShinyGadgetDialogEvent.TYPE, this);
       eventBus.addHandler(ExecuteUserCommandEvent.TYPE, this);
+      eventBus.addHandler(ShowPageViewerEvent.TYPE, this);
 
       // We don't want to send setWorkbenchMetrics more than once per 1/2-second
       metricsChangedCommand_ = new TimeBufferedCommand(-1, -1, 500)
@@ -529,6 +533,26 @@ public class Workbench implements BusyHandler,
       server_.executeUserCommand(event.getCommandName(), new VoidServerRequestCallback());
    }
    
+   @Override
+   public void onShowPageViewer(ShowPageViewerEvent event)
+   {
+      // create preview params
+      HTMLPreviewParams params = HTMLPreviewParams.create(
+        event.getPath(),   // path to file
+        "UTF-8",           // encoding
+        false,             // not markdown 
+        false,             // no knit required
+        false,             // not a notebook
+        false              // don't show the path
+      );
+      
+      // show HTML preview window
+      eventBus_.fireEvent(new ShowHTMLPreviewEvent(params));
+      
+      // run preview (will just reflect the preview URL back into the client)
+      server_.previewHTML(params, new SimpleRequestCallback<Boolean>());      
+   }
+   
    private final Server server_;
    private final EventBus eventBus_;
    private final Session session_;
@@ -547,5 +571,6 @@ public class Workbench implements BusyHandler,
    private WorkbenchMetrics lastWorkbenchMetrics_;
    private WorkbenchNewSession newSession_;
    private boolean nearQuotaWarningShown_ = false;
+  
    
 }

@@ -46,6 +46,7 @@
 #include <r/RJson.hpp>
 #include <r/RUtil.hpp>
 #include <r/ROptions.hpp>
+#include <r/RRoutines.hpp>
 
 #include <session/SessionModuleContext.hpp>
 #include <session/SessionSourceDatabase.hpp>
@@ -955,6 +956,14 @@ void handlePreviewRequest(const http::Request& request,
    }
 }
 
+SEXP rs_showPageViewer(SEXP pathSEXP)
+{
+   std::string path = r::sexp::safeAsString(pathSEXP);
+   ClientEvent showPageViewerEvent(client_events::kShowPageViewer, path);
+   module_context::enqueClientEvent(showPageViewerEvent);
+   return R_NilValue;
+}
+
    
 } // anonymous namespace
    
@@ -1009,6 +1018,8 @@ core::json::Object capabilitiesAsJson()
 
 Error initialize()
 {  
+   RS_REGISTER_CALL_METHOD(rs_showPageViewer, 1);
+
    using boost::bind;
    using namespace module_context;
    ExecBlock initBlock ;

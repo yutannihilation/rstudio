@@ -161,6 +161,7 @@ const int kActiveConnectionsChanged = 142;
 const int kConnectionOpened = 143;
 const int kNotebookRangeExecuted = 144;
 const int kChunkExecStateChanged = 145;
+const int kShowPageViewer = 146;
 }
 
 void ClientEvent::init(int type, const json::Value& data)
@@ -442,6 +443,8 @@ std::string ClientEvent::typeName() const
          return "notebook_range_executed";
       case client_events::kChunkExecStateChanged:
          return "chunk_exec_state_changed";
+      case client_events::kShowPageViewer:
+         return "show_page_viewer";
       default:
          LOG_WARNING_MESSAGE("unexpected event type: " + 
                              safe_convert::numberToString(type_));

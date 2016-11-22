@@ -5082,7 +5082,8 @@ public class TextEditingTarget implements
                                             docUpdateSentinel_.getEncoding(),
                                             fileType_.isMarkdown(),
                                             fileType_.requiresKnit(),
-                                            false);
+                                            false,
+                                            true);
          }
       });
    }
@@ -5260,6 +5261,7 @@ public class TextEditingTarget implements
             {
                return HTMLPreviewParams.create(docUpdateSentinel_.getPath(),
                                                docUpdateSentinel_.getEncoding(),
+                                               true,
                                                true,
                                                true,
                                                true);

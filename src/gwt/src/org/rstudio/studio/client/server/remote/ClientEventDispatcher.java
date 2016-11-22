@@ -846,6 +846,11 @@ public class ClientEventDispatcher
             ChunkExecStateChangedEvent.Data data = event.getData();
             eventBus_.fireEvent(new ChunkExecStateChangedEvent(data));
          }
+         else if (type.equals(ClientEvent.ShowPageViewer)) 
+         {
+            String path = event.getData();
+            eventBus_.fireEvent(new ShowPageViewerEvent(path));
+         }
          else
          {
             GWT.log("WARNING: Server event not dispatched: " + type, null);

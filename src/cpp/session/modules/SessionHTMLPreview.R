@@ -38,3 +38,8 @@
    cat(signature, file = rmd, append = TRUE)
 })
 
+.rs.addFunction( "showPageViewer", function(path)
+{
+   .Call("rs_showPageViewer", path.expand(path))
+})
+
