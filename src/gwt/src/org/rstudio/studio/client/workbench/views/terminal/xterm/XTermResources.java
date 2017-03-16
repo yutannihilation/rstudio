@@ -1,7 +1,7 @@
 /*
  * XTermResources.java
  *
- * Copyright (C) 2009-17 by RStudio, Inc.
+ * Copyright (C) 2009-16 by RStudio, Inc.
  *
  * Unless you have received this program directly from RStudio pursuant
  * to the terms of a commercial license agreement with RStudio, then
@@ -33,10 +33,4 @@ public interface XTermResources extends ClientBundle
 
    @Source("fit-uncompressed.js")
    StaticDataResource xtermfitjsUncompressed();
-
-   @Source("attach.js")
-   StaticDataResource xtermattachjs();
-
-   @Source("attach-uncompressed.js")
-   StaticDataResource xtermattachjsUncompressed();
 }
