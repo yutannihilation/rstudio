@@ -32,6 +32,7 @@ import org.rstudio.studio.client.workbench.views.terminal.xterm.XTermNative;
 import org.rstudio.studio.client.workbench.views.terminal.xterm.XTermResources;
 import org.rstudio.studio.client.workbench.views.terminal.xterm.XTermThemeResources;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
@@ -54,7 +55,7 @@ public class XTermWidget extends Widget implements RequiresResize,
   /**
     *  Creates an XTermWidget.
     */
-   public XTermWidget()
+   public XTermWidget(boolean useRPC)
    {
       // Create an element to hold the terminal widget
       setElement(Document.get().createDivElement());
@@ -71,14 +72,17 @@ public class XTermWidget extends Widget implements RequiresResize,
       terminal_.addClass("ace_editor");
       terminal_.addClass(FontSizer.getNormalFontSizeClass());
 
-      // Handle keystrokes from the xterm and dispatch them
-      addDataEventHandler(new CommandWithArg<String>()
+      if (useRPC)
       {
-         public void execute(String data)
+         // Handle keystrokes from the xterm and dispatch them
+         addDataEventHandler(new CommandWithArg<String>()
          {
-            fireEvent(new TerminalDataInputEvent(data));
-         }
-      });
+            public void execute(String data)
+            {
+               fireEvent(new TerminalDataInputEvent(data));
+            }
+         });
+      }
       
       // Handle title events from the xterm and dispatch them
       addTitleEventHandler(new CommandWithArg<String>()
@@ -268,6 +272,33 @@ public class XTermWidget extends Widget implements RequiresResize,
       }
       return false;
    }
+
+   /**
+    * Create and connect to WebSocket for terminal input/output with server.
+    * @param handle Unique terminal handle for server process.
+    * @return true if successful
+    */
+   public boolean associateSocket(String handle)
+   {
+      webSocket_ = terminal_.openSocket(handle);
+      if (webSocket_ == null)
+      {
+         return false;
+      }
+      
+      terminal_.attachSocket(webSocket_);
+      return true;
+   }
+ 
+   public void closeSocket()
+   {
+      if (webSocket_ != null)
+      {
+         terminal_.detachSocket(webSocket_);
+         terminal_.closeSocket(webSocket_);
+         webSocket_ = null;
+      }
+   }
    
    private static final ExternalJavaScriptLoader getLoader(StaticDataResource release,
                                                            StaticDataResource debug)
@@ -313,8 +344,15 @@ public class XTermWidget extends Widget implements RequiresResize,
                @Override
                public void onLoaded()
                {
-                  if (command != null)
-                     command.execute();
+                  xtermAttachLoader_.addCallback(new Callback()
+                  {
+                     @Override
+                     public void onLoaded()
+                     {
+                        if (command != null)
+                           command.execute();
+                     } 
+                  });
                }
             });
          }
@@ -329,6 +367,10 @@ public class XTermWidget extends Widget implements RequiresResize,
          getLoader(XTermResources.INSTANCE.xtermfitjs(),
                    XTermResources.INSTANCE.xtermfitjsUncompressed());
 
+   private static final ExternalJavaScriptLoader xtermAttachLoader_ =
+         getLoader(XTermResources.INSTANCE.xtermattachjs(),
+                   XTermResources.INSTANCE.xtermattachjsUncompressed());
+
    private XTermNative terminal_;
    private LinkElement currentStyleEl_;
    private boolean initialized_ = false;
@@ -336,5 +378,6 @@ public class XTermWidget extends Widget implements RequiresResize,
    private int previousRows_ = -1;
    private int previousCols_ = -1;
    private final static String XTERM_CLASS = "xterm-rstudio";
-
+   
+   private JavaScriptObject webSocket_;
 }

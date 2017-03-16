@@ -69,6 +69,7 @@ public class TerminalSession extends XTermWidget
     * @param cols number of columns in terminal
     * @param rows number of rows in terminal
     * @param shellType type of shell to run
+    * @param useRPC use RStudio RPC for terminal read/write versus websockets/pipe
     */
    public TerminalSession(int sequence,
                           String handle,
@@ -77,8 +78,13 @@ public class TerminalSession extends XTermWidget
                           boolean hasChildProcs,
                           int cols,
                           int rows,
-                          int shellType)
+                          int shellType,
+                          boolean useRPC)
    {
+      super(useRPC);
+      
+      useRPC_ = useRPC;
+      
       RStudioGinjector.INSTANCE.injectMembers(this);
       sequence_ = sequence;
       terminalHandle_ = handle;
@@ -135,7 +141,19 @@ public class TerminalSession extends XTermWidget
                return;
             } 
 
-            addHandlerRegistration(consoleProcess_.addConsoleOutputHandler(TerminalSession.this));
+            if (useRPC_)
+            {
+               addHandlerRegistration(consoleProcess_.addConsoleOutputHandler(TerminalSession.this));
+            }
+            else
+            {
+               // TODO (gary) error handling
+               if (!TerminalSession.this.associateSocket(consoleProcess_.getProcessInfo().getHandle()))
+               {
+                  writeln("Unable to connect websocket");
+               }
+            }
+            
             addHandlerRegistration(consoleProcess_.addProcessExitHandler(TerminalSession.this));
             addHandlerRegistration(addResizeTerminalHandler(TerminalSession.this));
             addHandlerRegistration(addXTermTitleHandler(TerminalSession.this));
@@ -145,7 +163,6 @@ public class TerminalSession extends XTermWidget
             // user input can wake up a suspended session
             if (terminalInputHandler_ == null)
                terminalInputHandler_ = addTerminalDataInputHandler(TerminalSession.this);
-
             consoleProcess.start(new ServerRequestCallback<Void>()
             {
                @Override
@@ -186,6 +203,7 @@ public class TerminalSession extends XTermWidget
       consoleProcess_ = null;
       connected_ = false;
       connecting_ = false;
+      closeSocket();
    }
 
    @Override
@@ -620,6 +638,7 @@ public class TerminalSession extends XTermWidget
    private boolean newTerminal_ = true;
    private int cols_ = ConsoleProcessInfo.DEFAULT_COLS;
    private int rows_ = ConsoleProcessInfo.DEFAULT_ROWS;;
+   private final boolean useRPC_;
 
    // Injected ---- 
    private WorkbenchServerOperations server_; 

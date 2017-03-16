@@ -38,6 +38,7 @@ cp ${XTERM_BUILD_DIR}/xterm.css ${XTERM_TARGET_DIR}/xterm.css
 # uncompressed js
 cp ${XTERM_BUILD_DIR}/xterm.js ${XTERM_TARGET_DIR}/xterm-uncompressed.js
 cp ${XTERM_ADDONS_DIR}/fit/fit.js ${XTERM_TARGET_DIR}/fit-uncompressed.js
+cp ${XTERM_ADDONS_DIR}/attach/attach.js ${XTERM_TARGET_DIR}/attach-uncompressed.js
 
 # minified js using closure
 minify () {
@@ -48,6 +49,7 @@ minify () {
 
 minify ${XTERM_BUILD_DIR}/xterm.js ${XTERM_TARGET_DIR}/xterm.js
 minify ${XTERM_ADDONS_DIR}/fit/fit.js ${XTERM_TARGET_DIR}/fit.js
+minify ${XTERM_ADDONS_DIR}/attach/attach.js ${XTERM_TARGET_DIR}/attach.js
 
 echo "Tweaking CSS"
 cd src

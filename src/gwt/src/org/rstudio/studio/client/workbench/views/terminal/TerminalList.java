@@ -324,7 +324,8 @@ public class TerminalList implements Iterable<String>,
                     true,  // childProcs
                     ConsoleProcessInfo.DEFAULT_COLS,
                     ConsoleProcessInfo.DEFAULT_ROWS,
-                    TerminalShellInfo.SHELL_DEFAULT);
+                    TerminalShellInfo.SHELL_DEFAULT,
+                    true /*useRPC*/);
    }
 
    /**
@@ -347,7 +348,8 @@ public class TerminalList implements Iterable<String>,
                     existing.getChildProcs(),
                     existing.getCols(),
                     existing.getRows(),
-                    existing.getShellType());
+                    existing.getShellType(),
+                    true /*useRPC*/);
       return true;
    }
 
@@ -417,10 +419,11 @@ public class TerminalList implements Iterable<String>,
                              boolean hasChildProcs,
                              int cols,
                              int rows,
-                             int shellType)
+                             int shellType,
+                             boolean useRPC)
    {
       TerminalSession newSession = new TerminalSession(
-            sequence, terminalHandle, caption, title, hasChildProcs, cols, rows, shellType);
+            sequence, terminalHandle, caption, title, hasChildProcs, cols, rows, shellType, useRPC);
       newSession.connect();
       updateTerminalBusyStatus();
    }
