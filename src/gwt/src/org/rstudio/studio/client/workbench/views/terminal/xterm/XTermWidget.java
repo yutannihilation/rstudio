@@ -81,7 +81,7 @@ public class XTermWidget extends Widget implements RequiresResize,
          {
             fireEvent(new TerminalDataInputEvent(data));
          }
-      }); 
+      });
 
       // Handle title events from the xterm and dispatch them
       addTitleEventHandler(new CommandWithArg<String>()
@@ -100,9 +100,6 @@ public class XTermWidget extends Widget implements RequiresResize,
    {
    }
 
-   
-
- 
    /**
     * One one line of text to the terminal.
     * @param str Text to write (CRLF will be appended)

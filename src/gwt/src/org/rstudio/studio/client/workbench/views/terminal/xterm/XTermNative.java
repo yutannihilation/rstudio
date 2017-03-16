@@ -105,41 +105,6 @@ public class XTermNative extends JavaScriptObject
    }-*/;
    
    /**
-    * Create WebSocket to talk to terminal instance on server.
-    * @param handle TerminalSession handle
-    * @return Connected WebSocket, or null if unable to connect
-    */
-   public final native JavaScriptObject openSocket(String handle) /*-{
-      var ep = '/websocket/terminal/' + handle;
-      var socketUrl;
-      if (window.location.protocol == 'http:') {
-         socketUrl = 'ws://' + window.location.host + ep;
-      } else if (window.location.protocol == 'https:') {
-         socketUrl = 'wss://' + window.location.host + ep;
-      } else {
-         return null;
-      }
-      return new WebSocket(socketUrl);
-   }-*/;
- 
-   /**
-    * Associate previously opened WebSocket with this terminal. Caller is
-    * responsible for closing the socket.
-    * @param socket socket created with openSocket
-    */
-   public final native void attachSocket(JavaScriptObject socket) /*-{
-      this.attach(socket, true, true);
-   }-*/; 
-   
-   public final native void detachSocket(JavaScriptObject socket) /*-{
-      this.detach(socket);
-   }-*/;
-   
-   public final native void closeSocket(JavaScriptObject socket) /*-{
-      socket.close();
-   }-*/;
-
-   /**
     * Install a handler for user input (typing). Only one handler at a 
     * time may be installed. Previous handler will be overwritten.
     * @param command handler for data typed by the user

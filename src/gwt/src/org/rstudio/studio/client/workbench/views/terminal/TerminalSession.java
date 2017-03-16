@@ -145,6 +145,7 @@ public class TerminalSession extends XTermWidget
             // user input can wake up a suspended session
             if (terminalInputHandler_ == null)
                terminalInputHandler_ = addTerminalDataInputHandler(TerminalSession.this);
+
             consoleProcess.start(new ServerRequestCallback<Void>()
             {
                @Override
