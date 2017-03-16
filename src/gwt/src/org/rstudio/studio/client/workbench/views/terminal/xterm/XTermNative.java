@@ -103,7 +103,7 @@ public class XTermNative extends JavaScriptObject
    public final native void addClass(String classStr) /*-{
       this.element.classList.add(classStr);
    }-*/;
-   
+ 
    /**
     * Install a handler for user input (typing). Only one handler at a 
     * time may be installed. Previous handler will be overwritten.
