@@ -141,11 +141,6 @@ public class TerminalSession extends XTermWidget
             addHandlerRegistration(addXTermTitleHandler(TerminalSession.this));
             addHandlerRegistration(eventBus_.addHandler(SessionSerializationEvent.TYPE, TerminalSession.this));
 
-            // We keep this handler connected after a terminal disconnect so
-            // user input can wake up a suspended session
-            if (terminalInputHandler_ == null)
-               terminalInputHandler_ = addTerminalDataInputHandler(TerminalSession.this);
-
             consoleProcess.start(new ServerRequestCallback<Void>()
             {
                @Override
@@ -604,7 +599,6 @@ public class TerminalSession extends XTermWidget
    }
 
    private HandlerRegistrations registrations_ = new HandlerRegistrations();
-   private HandlerRegistration terminalInputHandler_;
    private ConsoleProcess consoleProcess_;
    private String caption_;
    private String title_;
