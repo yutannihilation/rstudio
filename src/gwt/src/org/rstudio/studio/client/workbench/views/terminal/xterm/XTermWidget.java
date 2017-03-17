@@ -43,15 +43,23 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
-import com.sksamuel.gwt.websockets.CloseEvent;
-import com.sksamuel.gwt.websockets.Websocket;
-import com.sksamuel.gwt.websockets.WebsocketListenerExt;
 
 /**
- * Xterm-compatible terminal emulator
+ * Xterm-compatible terminal emulator widget. This widget does no network
+ * communication.
+ * 
+ * To receive input (user typing), subscribe to TerminalDataInputEvent.
+ * 
+ * To send output to the terminal, use write() or writeln().
+ * 
+ * To receive notice of terminal resizes, subscribe to ResizeTerminalEvent.
+ * 
+ * For title changes (via escape sequences sent to terminal), subscribe to
+ * XTermTitleEvent.
  */
 public class XTermWidget extends Widget implements RequiresResize,
-                                                   ResizeTerminalEvent.HasHandlers, TerminalDataInputEvent.HasHandlers,
+                                                   ResizeTerminalEvent.HasHandlers, 
+                                                   TerminalDataInputEvent.HasHandlers,
                                                    XTermTitleEvent.HasHandlers
 {
   /**
